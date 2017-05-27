@@ -68,10 +68,12 @@ class App extends React.Component {
   }
 
   onRateConfigChange(configKey) {
-    return (event) => {
+    return (event, newValue) => {
       console.log('rate config change: ', configKey)
+      // debugger;
       const config = this.state.rateConfig[configKey]
-      const value = parseInt(event.target.value, 10)
+      // const value = parseInt(event.target.value, 10)
+      const value = newValue
       if (config.min <= value <= config.max) {
         // Set state.
         this.setState({
@@ -133,11 +135,16 @@ class App extends React.Component {
             <MaskedTextField
               className="payrate-input"
               key={denomination}
-              mask={this.numberMask}
-              placeholder={`${denomination} rate`}
               name={`${denomination} rate`}
+
+              /* Text mask */
+              mask={this.numberMask}
               onChange={this.onUpdateValues(denomination)}
               ref={(input) => {this.inputs[denomination] = input}}
+
+              /* Material UI */
+              floatingLabelText={`${denomination} rate`}
+              floatingLabelFixed={true}
             />
           ))
         }
@@ -147,6 +154,7 @@ class App extends React.Component {
           onResetRateConfigs={this.onResetRateConfigs}
           onRateConfigChange={this.onRateConfigChange}
         />
+        <br />
       </div>
     )
   }
