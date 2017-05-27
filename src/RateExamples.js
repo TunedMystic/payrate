@@ -35,7 +35,7 @@ class RateExamples extends React.Component {
 
     return (
       <div className="rate-examples-group">
-        <Table selectable={false}>
+        <Table className="rate-examples-table" selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn>Hourly</TableHeaderColumn>

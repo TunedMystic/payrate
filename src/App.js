@@ -33,7 +33,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.updateRateTable()
+    this.updateRateTable().then(() => {
+      const initHourlyRate = 20
+      this.inputs.hourly.textMaskInputElement.update(initHourlyRate)
+      this.inputs.hourly.inputElement.focus()
+      this.updateValues('hourly', initHourlyRate)
+    })
   }
 
   cleanNumValue(rawValue) {
