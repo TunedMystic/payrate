@@ -1,58 +1,22 @@
 import React from 'react'
-import MaskedInput from 'react-text-mask'
+// import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+// import RaisedButton from 'material-ui/RaisedButton'
+// import TextField from 'material-ui/TextField'
+import MaskedTextField from './MaskedTextField'
 
-import RateConfig from './RateConfig'
 import './App.css'
+import RateConfig from './RateConfig'
 import buildRateTable from './helpers/buildRateTable'
-  
+import config from './config'
+
 class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      denominations: [
-        'hourly', 'daily', 'weekly',
-        'monthly', 'yearly'
-      ],
-      maskConfig: {
-        prefix: '$ ',
-        includeThousandsSeparator: true,
-        thousandsSeparatorSymbol: ',',
-        allowDecimal: true,
-        decimalSymbol: '.',
-        decimalLimit: 2,
-        allowLeadingZeroes: true
-      },
-      rateConfig: {
-        hoursPerDay: {
-          value: 8,
-          default: 8,
-          min: 1,
-          max: 24,
-          label: 'Hours per Day'
-        },
-        daysPerWeek: {
-          value: 5,
-          default: 5,
-          min: 1,
-          max: 7,
-          label: 'Days per Week'
-        },
-        weeksPerMonth: {
-          value: 4,
-          default: 4,
-          min: 1,
-          max: 4,
-          label: 'Weeks per Month'
-        },
-        monthsPerYear: {
-          value: 12,
-          default: 12,
-          min: 1,
-          max: 12,
-          label: 'Months per Year'
-        },
-      },
+      denominations: config.denominations,
+      maskConfig: config.maskConfig,
+      rateConfig: config.rateConfig,
       rateTable: {},
       values: {},
     }
@@ -135,7 +99,7 @@ class App extends React.Component {
 
   getInputValue(denomination) {
     return this.cleanNumValue(
-      this.inputs[denomination].inputElement.value
+      this.inputs[denomination].inputElement.input.value
     )
   }
 
@@ -163,13 +127,15 @@ class App extends React.Component {
     return (
       <div>
         <h1>Payrate calculator</h1>
+        {/* <RaisedButton label="Default" /> */}
         {
           this.state.denominations.map(denomination => (
-            <MaskedInput
+            <MaskedTextField
               className="payrate-input"
               key={denomination}
               mask={this.numberMask}
               placeholder={`${denomination} rate`}
+              name={`${denomination} rate`}
               onChange={this.onUpdateValues(denomination)}
               ref={(input) => {this.inputs[denomination] = input}}
             />
