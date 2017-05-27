@@ -41,6 +41,43 @@ const config = {
       max: 12,
       label: 'Months per Year'
     },
+  },
+  rateTable: {
+    hourly: {
+      hourly: 0,
+      daily: 0,
+      weekly: 0,
+      monthly: 0,
+      yearly: 0,
+    },
+    daily: {
+      hourly: 0,
+      daily: 0,
+      weekly: 0,
+      monthly: 0,
+      yearly: 0,
+    },
+    weekly: {
+      hourly: 0,
+      daily: 0,
+      weekly: 0,
+      monthly: 0,
+      yearly: 0,
+    },
+    monthly: {
+      hourly: 0,
+      daily: 0,
+      weekly: 0,
+      monthly: 0,
+      yearly: 0,
+    },
+    yearly: {
+      hourly: 0,
+      daily: 0,
+      weekly: 0,
+      monthly: 0,
+      yearly: 0,
+    },
   }
 }
 

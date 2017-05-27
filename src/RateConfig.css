@@ -1,7 +1,26 @@
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
 .config {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.config-button-color {
+    color: #b2b2b2 !important;
+    fill: #b2b2b2 !important;
+}
+
+.config-label {
+    font-size: 0.9rem;
+    color: #4e4e4e;
+}
+
+.config-label strong {
+    color: #2f2f2f;
 }
 
 .config-item {
@@ -9,6 +28,22 @@
 }
 
 .config-slider > div {
-    margin-top: 0.5rem !important;
-    margin-bottom: 2.5rem !important;
+    margin-top: 0.4rem !important;
+    margin-bottom: 1.8rem !important;
+}
+
+.config-slider > div {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.config-table {
+  padding: 0rem 20rem;
+  width: 50%;
+}
+
+@media (max-width: 1024px) {
+   .config-table {
+      padding: 0rem 10rem;
+   }
 }

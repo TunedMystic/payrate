@@ -7,6 +7,7 @@ import MaskedTextField from './MaskedTextField'
 
 import './App.css'
 import RateConfig from './RateConfig'
+import RateExamples from './RateExamples'
 import buildRateTable from './helpers/buildRateTable'
 import config from './config'
 
@@ -17,7 +18,7 @@ class App extends React.Component {
       denominations: config.denominations,
       maskConfig: config.maskConfig,
       rateConfig: config.rateConfig,
-      rateTable: {},
+      rateTable: config.rateTable,
       values: {},
     }
     this.inputs = {};
@@ -28,6 +29,7 @@ class App extends React.Component {
     this.updateRateTable = this.updateRateTable.bind(this)
     this.onRateConfigChange = this.onRateConfigChange.bind(this)
     this.onResetRateConfigs = this.onResetRateConfigs.bind(this)
+    this.makeRateValues = this.makeRateValues.bind(this)
   }
 
   componentDidMount() {
@@ -113,6 +115,15 @@ class App extends React.Component {
     }
   }
 
+  makeRateValues(hourlyRate) {
+    const values = {}
+    const cleanedValue = this.cleanNumValue(hourlyRate)
+    for (const denomination of this.state.denominations) {
+      values[denomination] = cleanedValue * this.state.rateTable.hourly[denomination]
+    }
+    return values
+  }
+
   updateValues(eventDenomination, value) {
     console.log('[updateValues]')
     console.log(this.state.rateConfig)
@@ -127,34 +138,41 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="App">
         <h1>Payrate calculator</h1>
-        {/* <RaisedButton label="Default" /> */}
-        {
-          this.state.denominations.map(denomination => (
-            <MaskedTextField
-              className="payrate-input"
-              key={denomination}
-              name={`${denomination} rate`}
+        <div className="payrate-input-group">
+          {
+            this.state.denominations.map(denomination => (
+              <MaskedTextField
+                className="payrate-input"
+                key={denomination}
+                name={`${denomination} rate`}
 
-              /* Text mask */
-              mask={this.numberMask}
-              onChange={this.onUpdateValues(denomination)}
-              ref={(input) => {this.inputs[denomination] = input}}
+                /* Text mask */
+                mask={this.numberMask}
+                onChange={this.onUpdateValues(denomination)}
+                ref={(input) => {this.inputs[denomination] = input}}
 
-              /* Material UI */
-              floatingLabelText={`${denomination} rate`}
-              floatingLabelFixed={true}
-            />
-          ))
-        }
-        <h3>Config</h3>
+                /* Material UI */
+                floatingLabelText={`${denomination} rate`}
+                floatingLabelFixed={true}
+              />
+            ))
+          } 
+        </div>
+        <br />
+        <br />
+        <RateExamples
+          denominations={this.state.denominations}
+          makeRateValues={this.makeRateValues}
+        />
+        <br />
+        <br />
         <RateConfig
           rateConfig={this.state.rateConfig}
           onResetRateConfigs={this.onResetRateConfigs}
           onRateConfigChange={this.onRateConfigChange}
         />
-        <br />
       </div>
     )
   }

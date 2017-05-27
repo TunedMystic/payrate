@@ -18,11 +18,34 @@
   font-size: large;
 }
 
-.payrate-input {
-  text-transform: capitalize;
-}
-
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.payrate-input-group {
+  display: flex;
+  justify-content: center;
+  padding: 0rem 2rem;
+}
+
+.payrate-input {
+  text-transform: capitalize;
+  margin: 0rem 0.8rem;
+  width: 20% !important;
+}
+
+@media (max-width: 1024px) {
+  .payrate-input-group {
+    display: flex;
+    justify-content: center;
+    padding: 0rem 2rem;
+    flex-wrap: wrap;
+  }
+
+  .payrate-input {
+    text-transform: capitalize;
+    margin: 0rem 0.8rem;
+    width: 40% !important;
+  }
 }
