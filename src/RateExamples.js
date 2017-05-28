@@ -15,7 +15,7 @@ class RateExamples extends React.Component {
   constructor() {
     super()
     this.state = {
-      hourlyRates: ['10', '20', '30']
+      hourlyRates: ['10', '20', '30', '40']
     }
   }
 

@@ -1,19 +1,18 @@
 import React from 'react'
-// import MaskedInput from 'react-text-mask'
+
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 import { conformToMask } from 'text-mask-core/dist/textMaskCore'
-// import RaisedButton from 'material-ui/RaisedButton'
-// import TextField from 'material-ui/TextField'
-import MaskedTextField from './MaskedTextField'
 
 import ActionFace from 'material-ui/svg-icons/action/face'
+import MonetizationOn from 'material-ui/svg-icons/editor/monetization-on'
 import IconButton from 'material-ui/IconButton'
 
-import './App.css'
 import RateConfig from './RateConfig'
 import RateExamples from './RateExamples'
+import MaskedTextField from './MaskedTextField'
 import buildRateTable from './helpers/buildRateTable'
 import config from './config'
+import './App.css'
 
 class App extends React.Component {
   constructor() {
@@ -25,9 +24,8 @@ class App extends React.Component {
       rateTable: config.rateTable,
       values: {},
     }
-    this.inputs = {};
+    this.inputs = {}
     this.numberMask = createNumberMask(this.state.maskConfig)
-    this.conformToMask = conformToMask
 
     // Method bindings.
     this.cleanNumValue = this.cleanNumValue.bind(this)
@@ -37,6 +35,8 @@ class App extends React.Component {
     this.makeRateValues = this.makeRateValues.bind(this)
   }
 
+  // 1) Update the rate table.
+  // 2) Initialize the payrate input elements.
   componentDidMount() {
     this.updateRateTable().then(() => {
       const initHourlyRate = 20
@@ -46,6 +46,10 @@ class App extends React.Component {
     })
   }
 
+  // This method takes a masked number (str)
+  // and returns a cleaned value (int/float).
+  // Example:
+  //   - cleanNumValue('$ 1,000') -> 1000
   cleanNumValue(rawValue) {
     if (rawValue === '') {
       return ''
@@ -58,14 +62,19 @@ class App extends React.Component {
     return parseFloat(strippedVal, 10)
   }
 
+  // Build a new rate table from the current rate config.
   updateRateTable() {
     return new Promise((resolve, reject) => {
-      console.log('[updateRateTable]')
       const rateTable = buildRateTable(this.state.rateConfig)
       this.setState({ rateTable }, resolve)
     })
   }
 
+  // Handler for a rate config reset event.
+  // This method would:
+  //   1) Reset all rate configs to default values.
+  //   2) Rebuild the rate table
+  //   3) Update all values based on the new rate table.
   onResetRateConfigs() {
     const { rateConfig } = this.state;
     Object.keys(rateConfig).map(configKey => {
@@ -79,12 +88,14 @@ class App extends React.Component {
     )
   }
 
+  // Handler for a rate config change event.
+  // This method would:
+  //   1) Update the rate config
+  //   2) Rebuild the rate table
+  //   3) Update all values based on the new rate table.
   onRateConfigChange(configKey) {
     return (event, newValue) => {
-      console.log('rate config change: ', configKey)
-      // debugger;
       const config = this.state.rateConfig[configKey]
-      // const value = parseInt(event.target.value, 10)
       const value = newValue
       if (config.min <= value <= config.max) {
         // Set state.
@@ -111,20 +122,14 @@ class App extends React.Component {
     })
   }
 
+  // Get the cleaned value for a specific denomination.
   getInputValue(denomination) {
     return this.cleanNumValue(
       this.inputs[denomination].inputElement.input.value
     )
   }
 
-  onUpdateValues(denomination) {
-    return (event) => {
-      // Clean the input value.
-      const cleanedValue = this.cleanNumValue(event.target.value)
-      this.updateValues(denomination, cleanedValue)
-    }
-  }
-
+  // Return an object with masked values for each denomination.
   makeRateValues(hourlyRate) {
     const values = {}
     const cleanedValue = this.cleanNumValue(hourlyRate)
@@ -136,9 +141,18 @@ class App extends React.Component {
     return values
   }
 
+  // Handler for a payrate input change event.
+  // This method would update all other input values appropriately.
+  onUpdateValues(denomination) {
+    return (event) => {
+      // Clean the input value.
+      const cleanedValue = this.cleanNumValue(event.target.value)
+      this.updateValues(denomination, cleanedValue)
+    }
+  }
+
+  // Internal handler for `this.onUpdateValues`.
   updateValues(eventDenomination, value) {
-    console.log('[updateValues]')
-    console.log(this.state.rateConfig)
     // Calculate the equivalent amount for all other denominations.
     for (const denomination of this.state.denominations) {
       if (denomination !== eventDenomination) {
@@ -150,8 +164,11 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <h1>Payrate calculator</h1>
+      <div className="app">
+        <div className="header">
+          <MonetizationOn className="header-logo" />
+          <h2>Payrate calculator</h2>
+        </div>
         <div className="payrate-input-group">
           {
             this.state.denominations.map(denomination => (

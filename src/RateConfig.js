@@ -1,18 +1,18 @@
 import React from 'react';
 
-import FlatButton from 'material-ui/FlatButton'
-import RaisedButton from 'material-ui/RaisedButton'
-import Slider from 'material-ui/Slider'
-import './RateConfig.css'
-import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down'
-import HardwareKeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up'
-
 import {
   Table,
   TableBody,
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton'
+import Slider from 'material-ui/Slider'
+import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down'
+import HardwareKeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up'
+
+import './RateConfig.css'
 
 
 class RateConfig extends React.Component {
@@ -47,14 +47,7 @@ class RateConfig extends React.Component {
         />
         <br />
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-          className={`config-table ${this.state.active ? '' : 'hidden'}`}
-        >
+        <div className={`config-table ${this.state.active ? '' : 'hidden'}`}>
         <Table selectable={false}>
           <TableBody displayRowCheckbox={false}>
           {
