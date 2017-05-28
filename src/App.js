@@ -1,9 +1,12 @@
 import React from 'react'
 // import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+import { conformToMask } from 'text-mask-core/dist/textMaskCore'
 // import RaisedButton from 'material-ui/RaisedButton'
 // import TextField from 'material-ui/TextField'
 import MaskedTextField from './MaskedTextField'
+
+import ActionFace from 'material-ui/svg-icons/action/face'
 
 import './App.css'
 import RateConfig from './RateConfig'
@@ -23,6 +26,7 @@ class App extends React.Component {
     }
     this.inputs = {};
     this.numberMask = createNumberMask(this.state.maskConfig)
+    this.conformToMask = conformToMask
 
     // Method bindings.
     this.cleanNumValue = this.cleanNumValue.bind(this)
@@ -124,7 +128,9 @@ class App extends React.Component {
     const values = {}
     const cleanedValue = this.cleanNumValue(hourlyRate)
     for (const denomination of this.state.denominations) {
-      values[denomination] = cleanedValue * this.state.rateTable.hourly[denomination]
+      let value = `${cleanedValue * this.state.rateTable.hourly[denomination]}`
+      value = conformToMask(value, this.numberMask(value))
+      values[denomination] = value.conformedValue
     }
     return values
   }
@@ -167,6 +173,7 @@ class App extends React.Component {
         </div>
         <br />
         <br />
+        <br />
         <RateExamples
           denominations={this.state.denominations}
           makeRateValues={this.makeRateValues}
@@ -178,6 +185,13 @@ class App extends React.Component {
           onResetRateConfigs={this.onResetRateConfigs}
           onRateConfigChange={this.onRateConfigChange}
         />
+        <br />
+        <br />
+        <div className="footer">
+          <p>Made by </p>
+          <ActionFace className="logo" />
+          <p> in nyc.</p>
+        </div>
       </div>
     )
   }

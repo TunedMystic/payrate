@@ -1,6 +1,5 @@
 .hidden {
-    display: none;
-    visibility: hidden;
+    display: none !important;
 }
 
 .config {
@@ -33,17 +32,28 @@
 }
 
 .config-slider > div {
-    margin-top: 1rem !important;
-    margin-bottom: 1rem !important;
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
 }
 
 .config-table {
   padding: 0rem 20rem;
-  width: 50%;
+}
+
+@media (max-width: 1260px) {
+   .config-table {
+      padding: 0rem 10rem;
+   }
 }
 
 @media (max-width: 1024px) {
    .config-table {
-      padding: 0rem 10rem;
+      padding: 0rem 7rem;
+   }
+}
+
+@media (max-width: 760px) {
+   .config-table {
+      padding: 0rem 0.4rem;
    }
 }

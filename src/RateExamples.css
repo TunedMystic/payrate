@@ -4,7 +4,12 @@
   padding: 0rem 2rem;
 }
 
-/*.rate-examples-table {
-    margin: 0rem 0.8rem;
+.rate-value {
+    font-size: 16px !important;
 }
-*/
+
+@media (max-width: 760px) {
+    .hide-sm {
+        display: none;
+    }
+}

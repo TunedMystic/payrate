@@ -7,6 +7,13 @@ import './RateConfig.css'
 import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down'
 import HardwareKeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up'
 
+import {
+  Table,
+  TableBody,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
+
 
 class RateConfig extends React.Component {
   constructor() {
@@ -40,26 +47,41 @@ class RateConfig extends React.Component {
         />
         <br />
 
-        <div className={this.state.active ? '' : 'hidden'}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+          className={`config-table ${this.state.active ? '' : 'hidden'}`}
+        >
+        <Table selectable={false}>
+          <TableBody displayRowCheckbox={false}>
           {
             Object.keys(this.props.rateConfig).map(configKey => {
               const config = this.props.rateConfig[configKey]
               return (
-                <div key={configKey} className="config-item">
-                  <label className="config-label">{config.label}: <strong>{this.props.rateConfig[configKey].value}</strong></label>
-                  <Slider
-                    className="config-slider"
-                    type="number"
-                    min={config.min}
-                    max={config.max}
-                    step={1}
-                    value={this.props.rateConfig[configKey].value}
-                    onChange={this.props.onRateConfigChange(configKey)}
-                  />
-                </div>
+                <TableRow key={configKey} style={{border: 'none'}}>
+                  <TableRowColumn>
+                    <label className="config-label">{config.label}: <strong>{this.props.rateConfig[configKey].value}</strong></label>
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    <Slider
+                      className="config-slider"
+                      type="number"
+                      min={config.min}
+                      max={config.max}
+                      step={1}
+                      value={this.props.rateConfig[configKey].value}
+                      onChange={this.props.onRateConfigChange(configKey)}
+                    />
+                  </TableRowColumn>
+                </TableRow>
               )
             })
           }
+          </TableBody>
+        </Table>
           <div>
             <RaisedButton onClick={this.props.onResetRateConfigs} label="Reset configs" />
           </div>

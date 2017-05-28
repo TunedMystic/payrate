@@ -77,3 +77,5 @@ MaskedTextField.propTypes = {
   keepCharPositions: PropTypes.bool,
   showMask: PropTypes.bool,
 }
+
+// export {default as conformToMask} from 'text-mask-core/dist/textMaskCore'
