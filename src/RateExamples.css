@@ -1,0 +1,15 @@
+.rate-examples-group {
+  display: flex;
+  justify-content: center;
+  padding: 0rem 2rem;
+}
+
+.rate-value {
+    font-size: 16px !important;
+}
+
+@media (max-width: 760px) {
+    .hide-sm {
+        display: none;
+    }
+}

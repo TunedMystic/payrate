@@ -1,0 +1,53 @@
+.hidden {
+    display: none !important;
+}
+
+.config {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.config-button-color {
+    color: #b2b2b2 !important;
+    fill: #b2b2b2 !important;
+}
+
+.config-label {
+    font-size: 0.9rem;
+    color: #4e4e4e;
+}
+
+.config-label strong {
+    color: #2f2f2f;
+}
+
+.config-slider > div {
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
+}
+
+.config-table {
+    padding: 0rem 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 1260px) {
+   .config-table {
+      padding: 0rem 10rem;
+   }
+}
+
+@media (max-width: 1024px) {
+   .config-table {
+      padding: 0rem 7rem;
+   }
+}
+
+@media (max-width: 760px) {
+   .config-table {
+      padding: 0rem 0.4rem;
+   }
+}

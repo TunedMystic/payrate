@@ -1,62 +1,30 @@
 import React from 'react'
-import MaskedInput from 'react-text-mask'
+
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+import { conformToMask } from 'text-mask-core/dist/textMaskCore'
+
+import ActionFace from 'material-ui/svg-icons/action/face'
+import MonetizationOn from 'material-ui/svg-icons/editor/monetization-on'
+import IconButton from 'material-ui/IconButton'
 
 import RateConfig from './RateConfig'
-import './App.css'
+import RateExamples from './RateExamples'
+import MaskedTextField from './MaskedTextField'
 import buildRateTable from './helpers/buildRateTable'
-  
+import config from './config'
+import './App.css'
+
 class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      denominations: [
-        'hourly', 'daily', 'weekly',
-        'monthly', 'yearly'
-      ],
-      maskConfig: {
-        prefix: '$ ',
-        includeThousandsSeparator: true,
-        thousandsSeparatorSymbol: ',',
-        allowDecimal: true,
-        decimalSymbol: '.',
-        decimalLimit: 2,
-        allowLeadingZeroes: true
-      },
-      rateConfig: {
-        hoursPerDay: {
-          value: 8,
-          default: 8,
-          min: 1,
-          max: 24,
-          label: 'Hours per Day'
-        },
-        daysPerWeek: {
-          value: 5,
-          default: 5,
-          min: 1,
-          max: 7,
-          label: 'Days per Week'
-        },
-        weeksPerMonth: {
-          value: 4,
-          default: 4,
-          min: 1,
-          max: 4,
-          label: 'Weeks per Month'
-        },
-        monthsPerYear: {
-          value: 12,
-          default: 12,
-          min: 1,
-          max: 12,
-          label: 'Months per Year'
-        },
-      },
-      rateTable: {},
+      denominations: config.denominations,
+      maskConfig: config.maskConfig,
+      rateConfig: config.rateConfig,
+      rateTable: config.rateTable,
       values: {},
     }
-    this.inputs = {};
+    this.inputs = {}
     this.numberMask = createNumberMask(this.state.maskConfig)
 
     // Method bindings.
@@ -64,12 +32,24 @@ class App extends React.Component {
     this.updateRateTable = this.updateRateTable.bind(this)
     this.onRateConfigChange = this.onRateConfigChange.bind(this)
     this.onResetRateConfigs = this.onResetRateConfigs.bind(this)
+    this.makeRateValues = this.makeRateValues.bind(this)
   }
 
+  // 1) Update the rate table.
+  // 2) Initialize the payrate input elements.
   componentDidMount() {
-    this.updateRateTable()
+    this.updateRateTable().then(() => {
+      const initHourlyRate = 20
+      this.inputs.hourly.textMaskInputElement.update(initHourlyRate)
+      this.inputs.hourly.inputElement.focus()
+      this.updateValues('hourly', initHourlyRate)
+    })
   }
 
+  // This method takes a masked number (str)
+  // and returns a cleaned value (int/float).
+  // Example:
+  //   - cleanNumValue('$ 1,000') -> 1000
   cleanNumValue(rawValue) {
     if (rawValue === '') {
       return ''
@@ -82,14 +62,19 @@ class App extends React.Component {
     return parseFloat(strippedVal, 10)
   }
 
+  // Build a new rate table from the current rate config.
   updateRateTable() {
     return new Promise((resolve, reject) => {
-      console.log('[updateRateTable]')
       const rateTable = buildRateTable(this.state.rateConfig)
       this.setState({ rateTable }, resolve)
     })
   }
 
+  // Handler for a rate config reset event.
+  // This method would:
+  //   1) Reset all rate configs to default values.
+  //   2) Rebuild the rate table
+  //   3) Update all values based on the new rate table.
   onResetRateConfigs() {
     const { rateConfig } = this.state;
     Object.keys(rateConfig).map(configKey => {
@@ -103,11 +88,15 @@ class App extends React.Component {
     )
   }
 
+  // Handler for a rate config change event.
+  // This method would:
+  //   1) Update the rate config
+  //   2) Rebuild the rate table
+  //   3) Update all values based on the new rate table.
   onRateConfigChange(configKey) {
-    return (event) => {
-      console.log('rate config change: ', configKey)
+    return (event, newValue) => {
       const config = this.state.rateConfig[configKey]
-      const value = parseInt(event.target.value, 10)
+      const value = newValue
       if (config.min <= value <= config.max) {
         // Set state.
         this.setState({
@@ -133,12 +122,27 @@ class App extends React.Component {
     })
   }
 
+  // Get the cleaned value for a specific denomination.
   getInputValue(denomination) {
     return this.cleanNumValue(
-      this.inputs[denomination].inputElement.value
+      this.inputs[denomination].inputElement.input.value
     )
   }
 
+  // Return an object with masked values for each denomination.
+  makeRateValues(hourlyRate) {
+    const values = {}
+    const cleanedValue = this.cleanNumValue(hourlyRate)
+    for (const denomination of this.state.denominations) {
+      let value = `${cleanedValue * this.state.rateTable.hourly[denomination]}`
+      value = conformToMask(value, this.numberMask(value))
+      values[denomination] = value.conformedValue
+    }
+    return values
+  }
+
+  // Handler for a payrate input change event.
+  // This method would update all other input values appropriately.
   onUpdateValues(denomination) {
     return (event) => {
       // Clean the input value.
@@ -147,9 +151,8 @@ class App extends React.Component {
     }
   }
 
+  // Internal handler for `this.onUpdateValues`.
   updateValues(eventDenomination, value) {
-    console.log('[updateValues]')
-    console.log(this.state.rateConfig)
     // Calculate the equivalent amount for all other denominations.
     for (const denomination of this.state.denominations) {
       if (denomination !== eventDenomination) {
@@ -161,26 +164,54 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Payrate calculator</h1>
-        {
-          this.state.denominations.map(denomination => (
-            <MaskedInput
-              className="payrate-input"
-              key={denomination}
-              mask={this.numberMask}
-              placeholder={`${denomination} rate`}
-              onChange={this.onUpdateValues(denomination)}
-              ref={(input) => {this.inputs[denomination] = input}}
-            />
-          ))
-        }
-        <h3>Config</h3>
+      <div className="app">
+        <div className="header">
+          <MonetizationOn className="header-logo" />
+          <h2>Payrate calculator</h2>
+        </div>
+        <div className="payrate-input-group">
+          {
+            this.state.denominations.map(denomination => (
+              <MaskedTextField
+                className="payrate-input"
+                key={denomination}
+                name={`${denomination} rate`}
+
+                /* Text mask */
+                mask={this.numberMask}
+                onChange={this.onUpdateValues(denomination)}
+                ref={(input) => {this.inputs[denomination] = input}}
+
+                /* Material UI */
+                floatingLabelText={`${denomination} rate`}
+                floatingLabelFixed={true}
+              />
+            ))
+          } 
+        </div>
+        <br />
+        <br />
+        <br />
+        <RateExamples
+          denominations={this.state.denominations}
+          makeRateValues={this.makeRateValues}
+        />
+        <br />
+        <br />
         <RateConfig
           rateConfig={this.state.rateConfig}
           onResetRateConfigs={this.onResetRateConfigs}
           onRateConfigChange={this.onRateConfigChange}
         />
+        <br />
+        <br />
+        <div className="footer">
+          <p>Made by </p>
+          <IconButton className="logo-link" href="https://github.com/tunedmystic">
+            <ActionFace className="logo" />
+          </IconButton>
+          <p> in nyc.</p>
+        </div>
       </div>
     )
   }
