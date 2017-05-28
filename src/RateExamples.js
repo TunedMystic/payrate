@@ -28,7 +28,7 @@ class RateExamples extends React.Component {
           this.props.denominations.map(denomination => (
             <TableRowColumn
               key={denomination}
-              className={`rate-value ${['hourly', 'weekly'].indexOf(denomination) !== -1 ? 'hide-sm' : ''}`}
+              className={`rate-value ${['hourly', 'weekly', 'yearly'].indexOf(denomination) !== -1 ? 'hide-sm' : ''}`}
             >
                 {rowValues[denomination]}
             </TableRowColumn>
@@ -47,7 +47,7 @@ class RateExamples extends React.Component {
               <TableHeaderColumn>Daily</TableHeaderColumn>
               <TableHeaderColumn className="hide-sm">Weekly</TableHeaderColumn>
               <TableHeaderColumn>Monthly</TableHeaderColumn>
-              <TableHeaderColumn>Yearly</TableHeaderColumn>
+              <TableHeaderColumn className="hide-sm">Yearly</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
