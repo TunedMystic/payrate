@@ -2,6 +2,7 @@
   "name": "payrate",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://tunedmystic.github.io/payrate",
   "dependencies": {
     "material-ui": "^0.18.1",
     "react": "^15.5.4",
@@ -18,5 +19,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "deploy-command": "git subtree push --prefix build origin gh-pages",
 }
