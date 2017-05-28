@@ -7,6 +7,7 @@ import { conformToMask } from 'text-mask-core/dist/textMaskCore'
 import MaskedTextField from './MaskedTextField'
 
 import ActionFace from 'material-ui/svg-icons/action/face'
+import IconButton from 'material-ui/IconButton'
 
 import './App.css'
 import RateConfig from './RateConfig'
@@ -189,7 +190,9 @@ class App extends React.Component {
         <br />
         <div className="footer">
           <p>Made by </p>
-          <ActionFace className="logo" />
+          <IconButton className="logo-link" href="https://github.com/tunedmystic">
+            <ActionFace className="logo" />
+          </IconButton>
           <p> in nyc.</p>
         </div>
       </div>
